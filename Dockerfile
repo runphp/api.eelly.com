@@ -38,6 +38,7 @@ RUN set -xe \
     && docker-php-ext-enable igbinary mongodb xdebug
 
 # install nginx
+RUN mkdir -p /run/nginx
 RUN apk --no-cache add nginx
 
 RUN mkdir -p /var/www/html
