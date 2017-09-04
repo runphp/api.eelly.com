@@ -30,9 +30,12 @@ RUN set -xe \
 # install some extension
 RUN docker-php-ext-install bcmath pdo_mysql
 
-RUN set -xe && pecl install igbinary-2.0.1 && docker-php-ext-enable igbinary
-RUN set -xe && pecl install mongodb-1.2.9 && docker-php-ext-enable mongodb
-RUN set -xe && pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug
+RUN set -xe \
+    && apk add --no-cache --virtual openssl-dev \
+    && pecl install igbinary-2.0.1 \
+    && pecl install mongodb-1.2.9 \
+    && pecl install xdebug-2.5.5 \
+    && docker-php-ext-enable igbinary mongodb xdebug
 
 # install nginx
 RUN apk --no-cache add nginx
