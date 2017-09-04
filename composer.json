@@ -1,0 +1,64 @@
+{
+	"name": "eelly/api",
+	"description": "eelly api server",
+	"type": "project",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "hehui",
+			"email": "runphp@qq.com"
+		}
+	],
+	"require": {
+		"eelly/easemob": "dev-master",
+		"eelly/eelly-sdk-php": "dev-master",
+		"eelly/fastdfs": "dev-master",
+		"eelly/framework": "dev-master",
+		"eelly/oauth2-client": "dev-master",
+		"eelly/oauth2-server": "dev-master",
+		"overtrue/easy-sms":"0.0.9",
+		"phpmailer/phpmailer": "v6.0.0rc5",
+		"aliyuncs/oss-sdk-php": "^2.2"
+	},
+	"require-dev": {
+		"eelly/devtools": "dev-master",
+		"friendsofphp/php-cs-fixer": "2.4.0",
+		"phpunit/phpunit": "6.2.2"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/devtools"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/easemob"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/eelly-sdk-php"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/fastdfs"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/framework"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/oauth2-client"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/EellyDev/oauth2-server"
+		}
+	],
+	"scripts": {
+		"post-root-package-install": [
+			"php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+		],
+		"test": "phpunit"
+	}
+}
