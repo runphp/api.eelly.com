@@ -192,17 +192,16 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
     && composer --ansi --version --no-interaction \
     && rm /tmp/installer.php
 
+RUN mkdir -p /var/www/api.eelly.com \
+    && mkdir -p /etc/nginx/certs
+
+VOLUME ["/var/www/api.eelly.com", "/etc/nginx/certs"]
+
 COPY var/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY var/etc/nginx/conf.d/_.conf /etc/nginx/conf.d/default.conf
 COPY var/etc/nginx/conf.d/api_eelly_dev.conf /etc/nginx/conf.d/api_eelly_dev.conf
 
-COPY var/etc/nginx/nginx.crt /etc/nginx/nginx.crt
-COPY var/etc/nginx/nginx.csr /etc/nginx/nginx.csr
-COPY var/etc/nginx/nginx.key /etc/nginx/nginx.key
 
-RUN mkdir -p /var/www/api.eelly.com
-
-VOLUME  ["/var/www/api.eelly.com"]
 
 WORKDIR /var/www
 
