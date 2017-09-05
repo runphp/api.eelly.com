@@ -200,6 +200,10 @@ COPY var/etc/nginx/nginx.crt /etc/nginx/nginx.crt
 COPY var/etc/nginx/nginx.csr /etc/nginx/nginx.csr
 COPY var/etc/nginx/nginx.key /etc/nginx/nginx.key
 
+RUN mkdir -p /var/www/api.eelly.com
+
+VOLUME  ["/var/www/api.eelly.com"]
+
 WORKDIR /var/www
 
 EXPOSE 80 443 9000
