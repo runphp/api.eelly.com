@@ -1,1 +1,1 @@
-[买家订单状态](/order_status.html)
+[买家订单状态](/api.eelly.com/order_status.html)
