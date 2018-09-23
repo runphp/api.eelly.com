@@ -16,8 +16,8 @@ category: order
 3        | **2**  order_count.likes < order.require_likes | 待成团               |待成团        | 待成团        | 无 | 无               | 无 | 无 
 4        | **2** order_count.likes >= order.require_likes | 集赞成功               |集赞成功      | 集赞成功        | 无 | 无               | `refund` `notifySendGoods` | `申请退款` `提醒发货` 
 5         | **4**    | 等待我收货              |等待我收货      | 卖家已发货，等待我收货 | 请在{time}内确认收货，逾期系统自动确认 | 最后一条物流动态 | `returnGoods` `expandReceivedTime` `confirmReceived` | `申请退货退款` `延长收货` `确认收货` 
-6        | (16, 20) order_refund.type = 1 and order.ship_time = 0 | 申请退款(未发货)         |申请退款中（未发货）      | 退款申请已提交，等待卖家处理 | {time}内卖家不处理，系统默认同意申请 | 无               | `agreedDetail` `refundDetail` | `查看协商记录` 
-7        | (16, 20) order_refund.type = 1 and order.ship_time > 0       | 申请退款(已发货)        |申请退款中（已发货）      | 退款申请已提交，等待卖家处理 | {time}内卖家不处理，系统默认同意申请 | 最后一条物流动态      | `agreedDetail` `refundDetail` | `查看协商记录` 
+6        | (16, 20) order_refund.type = 1 and order.ship_time = 0 | 申请退款(未发货)         |申请退款中(未发货)      | 退款申请已提交，等待卖家处理 | {time}内卖家不处理，系统默认同意申请 | 无               | `agreedDetail` `refundDetail` | `查看协商记录` `退款详情` 
+7        | (16, 20) order_refund.type = 1 and order.ship_time > 0       | 申请退款(已发货)        |申请退款中(已发货)      | 退款申请已提交，等待卖家处理 | {time}内卖家不处理，系统默认同意申请 | 最后一条物流动态      | `agreedDetail` `refundDetail` | `查看协商记录` `退款详情` 
 8         | **11,12** order_evaluation null and order.return_flag = 0 | 交易完成(待评价)         |交易完成      | 待评价     | 无 | 最后一条物流动态      | `review`  | `去评价` 
 9         | **11,12** order_evaluation not null and order.return_flag = 0 | 交易完成(已评价)         |交易完成(买家收货/10天自动收)     | 交易完成    | 无 | 无               | 无 | 无 
 10         | **15** order.extension = 0 AND order_log.type = 0 | 交易取消(系统取消)       |交易取消      | 交易取消    | 因超时未付款，系统自动取消订单 | 无               | 无 | 无 
@@ -30,8 +30,8 @@ category: order
 17        | (18)     | 已发退货             |等待卖家收货      | 我已发出退货，等待卖家收货 | 卖家需在{time}内确认收货，逾期自动收货 | 无               | `agreedDetail` `returnGoodsExpress` | `查看协商记录` `退货物流` 
 18        | (19) order_refund.type = 1 | 卖家拒绝退款           |卖家拒绝退款      | 卖家拒绝退款，等待我处理 | 您需在{time}内处理，逾期默认撤销退款申请 | 最后一条物流动态      | `agreedDetail` `queryRefund` | `查看协商记录` `去处理退款申请` 
 19        | (19) order_refund.type = 2 | 卖家拒绝退货           |卖家拒绝退货     | 卖家拒绝退货，等待我处理 | 您需在{time}内处理，逾期默认撤销退货申请 | 最后一条物流动态       | `agreedDetail` `queryReturnGoods` | `查看协商记录` `去处理退货申请` 
-20        | (21) order_refund.type = 1 | 卖家同意退款            |退款结算中（同意退款/2天自动同意）      | 退款结算中   | 卖家同意退款，衣联系统正在结算 | 无               | `refundDetail` | `查看退款详情` 
-21        | (21) order_refund.type = 2 | 收到退货             |退款结算中（卖家收货/10天自动收）      | 退款结算中   | 卖家确认收到退货，衣联系统正在结算 | 无               | `refundDetail` | `查看退款详情` 
+20        | (21) order_refund.type = 1 | 卖家同意退款            |退款结算中(同意退款/2天自动同意)      | 退款结算中   | 卖家同意退款，衣联系统正在结算 | 无               | `refundDetail` | `查看退款详情` 
+21        | (21) order_refund.type = 2 | 收到退货             |退款结算中(卖家收货/10天自动收)      | 退款结算中   | 卖家确认收到退货，衣联系统正在结算 | 无               | `refundDetail` | `查看退款详情` 
 22        | (22) order_arbitrate.status is null or != 1 | 买家申请仲裁         |客服介入处理      | 我已申请衣联客服介入 | 客服会在3个工作日内介入处理，请耐心等待 | 最后一条物流动态       | `cancelArbitrate` | `撤销介入申请` 
 23        | (22) order_arbitrate.status = 1 | 客服介入中 |客服介入处理      | 衣联客服已介入处理，请耐心等待 | 客服会联系您了解情况，请保持联系方式畅通 | 最后一条物流动态       | 无 | 无 
 24        | (23) order_arbitrate.status is null or != 1 | 卖家申请仲裁         |客服介入处理      | 卖家申请衣联客服介入 | 客服会在3个工作日内介入处理，请耐心等待 | 最后一条物流动态       | 无 | 无 
