@@ -42,7 +42,7 @@ category: order
 29 | **12**(25) order_arbitrate is null | 退货退款交易完成(无平台介入) |交易完成 | | 交易完成 |  | 无 | 无 | `review` | `待评价` 
 30 | (22) order_arbitrate.status = 1 and order_arbitrate.apply_flag = 2 | 客服介入中(卖家申请) |客服介入处理 | | 衣联客服已介入处理，请耐心等待 |  | 客服会联系您了解情况，请保持联系方式畅通 | 最后一条物流动态 | 无 | 无 
 31 | **15** order.extension = 0 AND order_log.type = 0 AND order_log.handle_id >  0 | 交易取消(管理员操作) |交易取消 | | 交易取消 |  | 因超时未付款，系统自动取消订单 | 无 |  |  
-32 | **15** order_log.type = 2 AND order.return_flag = 2 AND order_refund.agree > 0 | 交易取消(全额退款) |交易取消 | | 交易取消 | | 全额退款成功，订单取消(有申请) | 无 | `refundDetail` | `查看退款详情 
+32 | **15** order_log.type = 2 AND order.return_flag = 2 AND order_refund.agree > 0 | 交易取消(全额退款) |交易取消 | | 交易取消 | | 全额退款成功，订单取消(有申请) | 无 | `refundDetail` | `查看退款详情` 
 
 ### 返回数据字段说明
 
