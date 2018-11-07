@@ -22,8 +22,8 @@ category: order
 9         | **11,12** order_evaluation not null and order.return_flag = 0 | 交易完成(已评价)         |交易完成(买家收货/10天自动收)     |     | 交易完成    |     | 无 | 无               | 无 | 无 
 10         | **15** order.extension = 0 AND order_log.type = 0 AND order_log.handle_id =  0 | 交易取消(系统取消)       |交易取消      |      | 交易取消    |     | 因超时未付款，系统自动取消订单 | 无               | 无 | 无 
 11         | **15** order_log.type = 1 | 交易取消(买家取消)       |交易取消      |      | 交易取消    |     | 买家主动取消订单 | 无               | 无 | 无 
-12         | **15** order_log.type = 2 AND order.return_flag != 2 | 交易取消(卖家取消)       |交易取消      |      | 交易取消    |     | 卖家主动取消订单 | 无               | 无 | 无 
-13         | **15** order_log.type = 2 AND order.return_flag = 2 | 交易取消(全额退款)       |交易取消      |      | 交易取消    |     | 全额退款成功，订单取消 | 无               | `refundDetail` | `查看退款详情` 
+12         | **15** order_log.type = 2 AND order.return_flag = 0 | 交易取消(卖家取消)       |交易取消      |      | 交易取消    |     | 卖家主动取消订单(未付款) | 无               | 无 | 无 
+13         | **15** order_log.type = 2 AND order.return_flag = 2 AND order_refund.agree = 0 | 交易取消(全额退款)       |交易取消      |      | 交易取消    |     | 全额退款成功，订单取消(无申请) | 无               | `refundDetail` | `查看退款详情` 
 14 | **15** order.extension = 1 AND order_log.type = 0 | 交易取消(成团失败) |交易取消 | | 交易取消 |  | 全额退款成功，订单取消 | 无 | `refundDetail` | `查看退款详情` 
 15        | (16, 20) order_refund.type = 2 | 申请退货退款           |申请退货中      |      | 退货申请已提交，等待卖家处理 |  | {time}内卖家不处理，系统默认同意申请 | 最后一条物流动态      | `agreedDetail` `refundDetail` | `查看协商记录` `查看退款详情` 
 16        | (17) | 同意退货              |等待我退货      |      | 卖家同意退货，等待我处理 |  | 您需在{time}内处理，逾期默认撤销退款申请 | 最后一条物流动态       | `cancelReturnGoods` `sendReturnGoods` | `撤销申请` `发出退货` 
@@ -35,13 +35,14 @@ category: order
 22        | (22) order_arbitrate.status is null or != 1 | 买家申请仲裁         |客服介入处理      |      | 我已申请衣联客服介入 |  | 客服会在3个工作日内介入处理，请耐心等待 | 最后一条物流动态       | `cancelArbitrate` | `撤销介入申请` 
 23        | (22) order_arbitrate.status = 1 and order_arbitrate.apply_flag = 1 | 客服介入中(买家申请) |客服介入处理      |      | 衣联客服已介入处理，请耐心等待 |  | 客服会联系您了解情况，请保持联系方式畅通 | 最后一条物流动态       | 无 | 无 
 24        | (23) order_arbitrate.status is null or != 1 | 卖家申请仲裁         |客服介入处理      |      | 卖家申请衣联客服介入 |  | 客服会在3个工作日内介入处理，请耐心等待 | 最后一条物流动态       | 无 | 无 
-25        | **12**(25) order_arbitrate.blame_flag = 1 | 客服介入完成(钱给买家)  |交易完成      |      | 客服介入处理完毕 |  | 无 | 无               | `review`                                           | `待评价`                              
-26        | **12**(25) order_arbitrate.blame_flag = 2 | 客服介入完成(钱给卖家)   |交易完成      |      | 客服介入处理完毕 |  | 无 | 无               | `review`                                           | `待评价`                              
-27        |**12**(25) order_arbitrate.blame_flag = 3  | 客服介入完成(退一部分)   |交易完成      |      | 客服介入处理完毕 |  | 无 | 无               | `review` | `待评价` 
-28        |**12**(25) order_arbitrate.blame_flag = 4  | 客服介入完成(财务处理) |交易完成      |      | 客服介入处理完毕 |  | 其他具体原因 | 无               | `review` | `待评价` 
+25        | **12**(25) order_arbitrate.blame_flag = 1 | 客服介入完成(钱给买家)  |交易取消      | 交易取消 | 客服介入处理完毕 | 客服介入处理完毕 | 无 | 无               | `review`                                           | `待评价`                              
+26        | **12**(25) order_arbitrate.blame_flag = 2 | 客服介入完成(钱给卖家)   |交易完成      |      | 客服介入处理完毕 | 客服介入处理完毕 | 无 | 无               | `review`                                           | `待评价`                              
+27        |**12**(25) order_arbitrate.blame_flag = 3  | 客服介入完成(退一部分)   |交易完成      |      | 客服介入处理完毕 | 客服介入处理完毕 | 无 | 无               | `review` | `待评价` 
+28        |**12**(25) order_arbitrate.blame_flag = 4  | 客服介入完成(财务处理) |交易完成      |      | 客服介入处理完毕 | 客服介入处理完毕 | 其他具体原因 | 无               | `review` | `待评价` 
 29 | **12**(25) order_arbitrate is null | 退货退款交易完成(无平台介入) |交易完成 | | 交易完成 |  | 无 | 无 | `review` | `待评价` 
 30 | (22) order_arbitrate.status = 1 and order_arbitrate.apply_flag = 2 | 客服介入中(卖家申请) |客服介入处理 | | 衣联客服已介入处理，请耐心等待 |  | 客服会联系您了解情况，请保持联系方式畅通 | 最后一条物流动态 | 无 | 无 
 31 | **15** order.extension = 0 AND order_log.type = 0 AND order_log.handle_id >  0 | 交易取消(管理员操作) |交易取消 | | 交易取消 |  | 因超时未付款，系统自动取消订单 | 无 |  |  
+32 | **15** order_log.type = 2 AND order.return_flag = 2 AND order_refund.agree > 0 | 交易取消(全额退款) |交易取消 | | 交易取消 | | 全额退款成功，订单取消(有申请) | 无 | `refundDetail` | `查看退款详情 
 
 ### 返回数据字段说明
 
